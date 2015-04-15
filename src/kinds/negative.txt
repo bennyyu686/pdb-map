@@ -1,0 +1,3 @@
+CG ASP
+CD GLU
+OP1
