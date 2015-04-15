@@ -348,7 +348,7 @@ function gethistogram(data, weight) {
         if (val > maxValue) continue;
 
         for (var i = 0; i < frequency.length; i++) {
-            frequency[i] += weight[a] * Math.exp(-((binset[i]-val)*(binset[i]-val)) / (2*(val*0.9)*(val*0.9)));
+            frequency[i] += weight[a] * Math.exp(-((binset[i]-val)*(binset[i]-val)) / (2*(val*0.09)*(val*0.09)));
         }
     }
     return frequency;
