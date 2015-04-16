@@ -17,7 +17,7 @@ function getFingerprint(atoms) {
     for (var i = 0; i < finalResult.length; i++) {
         finalResult[i] = (finalResult[i] * 100) | 0;
     }
-    return finalResult.length;
+    return finalResult;
 }
 
 module.exports = getFingerprint;
