@@ -12,4 +12,17 @@ var contents = gzip.gunzipSync(file).toString();
 var atoms = parse(contents);
 var fingerprint = getFingerprint(atoms);
 
-console.log(fingerprint);
+function logSums(fp) {
+    for (var i = 0; i < 4; i++) {
+        var v = i*34;
+        var sum = 0;
+        for (var j = v; j < v+34; j++) {
+            sum += fp[j];
+        }
+        console.log(sum);
+    }
+}
+
+logSums(fingerprint);
+
+console.log(JSON.stringify(fingerprint));
