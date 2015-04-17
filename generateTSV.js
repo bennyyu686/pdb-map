@@ -24,6 +24,8 @@ function treatFile(file) {
     var data = fs.readFileSync(join(config.data, file));
     var contents = gzip.gunzipSync(data).toString();
     var protein = parse(contents);
-    var fingerprint = getFingerprint(protein.atoms);
-    process.stdout.write(protein.idCode + '\t' + fingerprint.join('\t') + '\n');
+    if (protein.experiment.indexOf('DIFFRACTION') > 0) {
+        var fingerprint = getFingerprint(protein.atoms);
+        process.stdout.write(protein.idCode + '\t' + fingerprint.join('\t') + '\n');
+    }
 }
