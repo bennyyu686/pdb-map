@@ -268,9 +268,9 @@ function getGrid(atoms) {
 
     function getAtomGridPosition(atomXYZ) {
         return [
-            centerIndex + Math.floor((atomXYZ[0] - gridX[centerIndex]) / gridSpacingXYZ[0]),
-            centerIndex + Math.floor((atomXYZ[1] - gridY[centerIndex]) / gridSpacingXYZ[1]),
-            centerIndex + Math.floor((atomXYZ[2] - gridZ[centerIndex]) / gridSpacingXYZ[2])
+            Math.floor((atomXYZ[0] - maxima.x[0] + 0.5) / (gridSizeXYZ[0] + 1) * gridSize),
+            Math.floor((atomXYZ[1] - maxima.y[0] + 0.5) / (gridSizeXYZ[1] + 1) * gridSize),
+            Math.floor((atomXYZ[2] - maxima.z[0] + 0.5) / (gridSizeXYZ[2] + 1) * gridSize)
         ];
     }
 }
