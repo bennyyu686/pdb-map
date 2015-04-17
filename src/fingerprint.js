@@ -394,7 +394,7 @@ function getHistogram(data, weight) {
         for (var i = 0; i < l; i++) {
             frequency[i] += weight[a] * Math.exp(-((binset[i]-val)*(binset[i]-val)) / (2*(val*0.09)*(val*0.09)));
         }
-    }g
+    }
     return frequency;
 }
 
