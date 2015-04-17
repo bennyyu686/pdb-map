@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/cheminfo/pdb",
   "dependencies": {
+    "glob": "^5.0.5",
     "ml-distance": "^1.0.0",
     "ml-matrix": "0.0.2"
   }

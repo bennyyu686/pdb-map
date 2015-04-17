@@ -12,7 +12,9 @@ function parse(pdb) {
     for (var i = 0; i < lines.length; i++) {
         var line = lines[i];
         var header = line.substring(0, 6);
-        if (header === 'EXPDTA') {
+        if (header === 'HEADER') {
+            result.idCode = line.substring(62, 66);
+        } else if (header === 'EXPDTA') {
             result.experiment = line.substring(10);
         } else if (header === 'ATOM  ') {
             result.atoms.push(new Atom(
