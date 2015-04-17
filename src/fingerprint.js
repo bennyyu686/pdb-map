@@ -191,6 +191,14 @@ function getMaxima(atoms) {
             result.z[1] = atomCoord[2];
         }
     }
+    
+    result.x[0] -= 0.5;
+    result.x[1] += 0.5;
+    result.y[0] -= 0.5;
+    result.y[1] += 0.5;
+    result.z[0] -= 0.5;
+    result.z[1] += 0.5;
+    
     return result;
 }
 
@@ -204,9 +212,9 @@ function getGrid(atoms) {
         Math.abs(maxima.z[0]) + Math.abs(maxima.z[1])
     ];
     var gridSpacingXYZ = [
-        (gridSizeXYZ[0] + 1) / (gridSize - 1),
-        (gridSizeXYZ[1] + 1) / (gridSize - 1),
-        (gridSizeXYZ[2] + 1) / (gridSize - 1)
+        gridSizeXYZ[0] / (gridSize - 1),
+        gridSizeXYZ[1] / (gridSize - 1),
+        gridSizeXYZ[2] / (gridSize - 1)
     ];
     var gridX = new Array(gridSize);
     var gridY = new Array(gridSize);
@@ -268,9 +276,9 @@ function getGrid(atoms) {
 
     function getAtomGridPosition(atomXYZ) {
         return [
-            Math.floor((atomXYZ[0] - maxima.x[0] + 0.5) / (gridSizeXYZ[0] + 1) * gridSize),
-            Math.floor((atomXYZ[1] - maxima.y[0] + 0.5) / (gridSizeXYZ[1] + 1) * gridSize),
-            Math.floor((atomXYZ[2] - maxima.z[0] + 0.5) / (gridSizeXYZ[2] + 1) * gridSize)
+            Math.floor((atomXYZ[0] - maxima.x[0]) / gridSpacingXYZ[0]),
+            Math.floor((atomXYZ[1] - maxima.y[0]) / gridSpacingXYZ[1]),
+            Math.floor((atomXYZ[2] - maxima.z[0]) / gridSpacingXYZ[2])
         ];
     }
 }
@@ -386,7 +394,7 @@ function getHistogram(data, weight) {
         for (var i = 0; i < l; i++) {
             frequency[i] += weight[a] * Math.exp(-((binset[i]-val)*(binset[i]-val)) / (2*(val*0.09)*(val*0.09)));
         }
-    }
+    }g
     return frequency;
 }
 
