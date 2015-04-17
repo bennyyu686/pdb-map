@@ -4,7 +4,13 @@ var Matrix = require('ml-matrix');
 var euclidean = require('ml-distance').euclidean;
 
 function getFingerprint(atoms) {
+    //console.log('ATOMS');
+    //console.log(atoms.length);
+    //console.log('BEFORE');
+    //console.log(atoms[1].coordinates);
     normalizeCoordinates(atoms);
+    //console.log('AFTER NORM');
+    //console.log(atoms[1].normCoordinates);
     var eigenVectors = getEigenvectors(atoms);
     rotateCoordinates(atoms, eigenVectors);
     var grid = getGrid(atoms);
@@ -81,6 +87,9 @@ function getEigenvectors(atoms) {
         }
     }
 
+    //console.log('COV matrix');
+    //console.log(cov[0]);
+
     // Eigenvalue decomposition
     var evd = Matrix.DC.EVD(cov);
 
@@ -119,6 +128,14 @@ function getEigenvectors(atoms) {
         eigenVectors[i] = combined[i].vector
     }
 
+    //console.log('EIGENVALUES');
+    //console.log(eigenValues);
+
+    //console.log('EIGENVECTOR');
+    //console.log(eigenVectors[0][0] + " " + eigenVectors[0][1] + " " + eigenVectors[0][2]);
+    //console.log(eigenVectors[1][0] + " " + eigenVectors[1][1] + " " + eigenVectors[1][2]);
+    //console.log(eigenVectors[2][0] + " " + eigenVectors[2][1] + " " + eigenVectors[2][2]);
+
     return eigenVectors;
 }
 
@@ -138,6 +155,9 @@ function rotateCoordinates(atoms, eigenVectors) {
             }
         }
     }
+
+    //console.log('TRANSPOSE');
+    //console.log(atoms[1].newCoordinates);
 }
 
 /**
@@ -305,8 +325,10 @@ function getHistograms(grid) {
 
     for (i = 0; i < l; i++) {
         box = grid[i];
+        if (box.atoms.length === 0) continue;
         for (j = i + 1; j < l; j++) {
             var otherBox = grid[j];
+            if (otherBox.atoms.length === 0) continue;
             var distance = euclidean(box.coordinates, otherBox.coordinates);
 
             for (var k = 0; k < 4; k++) {
