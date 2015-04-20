@@ -6,7 +6,7 @@ var gzip = require('zlib');
 var parse = require('./src/parser');
 var getFingerprint = require('./src/fingerprint');
 
-var file = fs.readFileSync('./data/eg/4ERW.pdb1.gz');
+var file = fs.readFileSync('./data/vc/2AAI.pdb.gz');
 var contents = gzip.gunzipSync(file).toString();
 
 var protein = parse(contents);

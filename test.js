@@ -6,7 +6,7 @@ var gzip = require('zlib');
 var Matrix = require('ml-matrix');
 var Euclidean = require('ml-distance').euclidean;
 
-var file = fs.readFileSync('./data/eg/4ERW.pdb1.gz');
+var file = fs.readFileSync('./data/vc/2AAI.pdb.gz');
 var contents = gzip.gunzipSync(file).toString();
 
 var result = parse(contents);
