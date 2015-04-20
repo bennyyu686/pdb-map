@@ -32,8 +32,8 @@ function treatFile(file, cb) {
             if (protein.experiment.indexOf('DIFFRACTION') > 0) {
                 var fingerprint = getFingerprint(protein.atoms);
                 process.stdout.write(protein.idCode + '\t' + fingerprint.join('\t') + '\n');
-                cb();
             }
+            cb();
         });
     });
 }
