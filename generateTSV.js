@@ -9,7 +9,12 @@ var async = require('async');
 var parse = require('./src/parser');
 var getFingerprint = require('./src/fingerprint');
 
-var config = require('./config.json');
+var config;
+try {
+    config = require('./config.json');
+} catch(e) {
+    config = require('./config.default.json');
+}
 
 glob('**/*.gz', {
     cwd: config.data
