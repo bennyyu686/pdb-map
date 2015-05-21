@@ -27,7 +27,7 @@ function getFingerprint(atoms) {
         finalFP[i] = (finalFP[i] * 100) | 0;
     }
 
-    return finalFP.concat(
+    var finalResult = finalFP.concat(
         result[0].atomCount,
         result[1].atomCount,
         result[2].atomCount,
@@ -35,6 +35,8 @@ function getFingerprint(atoms) {
         nPMI,
         avgTogc
     );
+
+    return finalResult;
 }
 
 module.exports = getFingerprint;
@@ -109,7 +111,7 @@ function getEigenvectors(atoms) {
 
     // switch column to row
     for (i = 0; i < 3; i++) {
-        for (j = i + 1; j < 3; j++) {
+        for (j = i+1; j < 3; j++) {
             var tmp = 0;
             tmp = eigenVectors[i][j];
             eigenVectors[i][j] = eigenVectors[j][i];
@@ -330,7 +332,7 @@ function getHistograms(grid) {
         new Result()  // hyd
     ];
 
-    var i, j, k;
+    var i, j;
     var box, sum, sumPos, sumNeg, sumHyd, atomL, atom;
     var l = grid.length;
 
@@ -361,7 +363,7 @@ function getHistograms(grid) {
                 }
             }
 
-            for (k = 0; k < 4; k++) {
+            for (var k = 0; k < 4; k++) {
                 box.coordinates[k][0] = sum[k][0] / box.prop[k];
                 box.coordinates[k][1] = sum[k][1] / box.prop[k];
                 box.coordinates[k][2] = sum[k][2] / box.prop[k];
@@ -376,7 +378,7 @@ function getHistograms(grid) {
             var otherBox = grid[j];
             if (otherBox.atoms.length === 0) continue;
 
-            for (k = 0; k < 4; k++) {
+            for (var k = 0; k < 4; k++) {
                 if (box.prop[k] > 0 && otherBox.prop[k] > 0) {
                     var distance;
                     distance = euclidean(box.coordinates[k], otherBox.coordinates[k]);
@@ -431,7 +433,8 @@ function getHistogram(data, weight) {
         if (val > maxValue) continue;
 
         for (var i = 0; i < l; i++) {
-            frequency[i] += weight[a] * Math.exp(-((binset[i] - val) * (binset[i] - val)) / (2 * (val * 0.09) * (val * 0.09)));
+            frequency[i] += weight[a] * Math.exp(-((binset[i]-val)*(binset[i]-val)) / (2*(val*0.09)*(val*0.09)));
+
         }
     }
     return frequency;
@@ -461,7 +464,7 @@ function getPMI(atoms) {
     var l = atoms.length;
     var array = [0, 0, 0];
     var sorted = [0, 0, 0];
-    var used = [];
+    var used = new Array;
     var nPMI;
 
     if (l == 1) {
@@ -470,7 +473,7 @@ function getPMI(atoms) {
 
     var a = 0;
     for (var i = 0; i < 3; i++) {
-        for (var j = (i + 1); j < 3; j++) {
+        for (var j = (i+1); j < 3; j++) {
             for (var k = 0; k < l; k++) {
                 var atom = atoms[k];
                 var coordinates = atom.newCoordinates;
@@ -511,17 +514,18 @@ function getPMI(atoms) {
 }
 
 function getNormalizedPMI(PMI) {
-    return [PMI[0] / PMI[2], PMI[1] / PMI[2]];
+    var nPMI = [PMI[0] / PMI[2], PMI[1] / PMI[2]];
+    return nPMI;
 }
 
 function getMass(type) {
-    var atomsets = ['C', 'N', 'O', 'S', 'P'];
+    var atomsets = ["C","N","O","S","P"];
     var atommass = [12.0, 14.0, 16.0, 32.0, 15.0];
-    var atomtyp = type.substring(0, 1);
+    var atomtyp = type.substring(0,1);
     var mass;
     for (var a = 0; a < atomsets.length; a++) {
         if (atomtyp == atomsets[a]) {
-            mass = atommass[a];
+            mass=atommass[a];
             break;
         }
     }
@@ -540,9 +544,9 @@ function getDensity(grids) {
         if (hac == 0) {
             continue;
         }
-        gc[0] += grids[i].coordinates[0][0] * hac;
-        gc[1] += grids[i].coordinates[0][1] * hac;
-        gc[2] += grids[i].coordinates[0][2] * hac;
+        gc[0] += grids[i].coordinates[0][0]*hac;
+        gc[1] += grids[i].coordinates[0][1]*hac;
+        gc[2] += grids[i].coordinates[0][2]*hac;
         size += hac;
 
     }
