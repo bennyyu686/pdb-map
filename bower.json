@@ -1,0 +1,29 @@
+{
+  "name": "pdb-map",
+  "version": "0.0.0",
+  "description": "PDB maps",
+  "keywords": [
+    "pdb",
+    "maps"
+  ],
+  "main": [
+    "dist/pdb-map.js",
+    "dist/pdb-map.min.js"
+  ],
+  "authors": [
+    "Xian Jin",
+    "Michaël Zasso",
+    "Daniel Kostro"
+  ],
+  "homepage": "https://github.com/cheminfo/pdb-map",
+  "license": "MIT",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "ignore": [
+    "/*",
+    "!dist/*"
+  ]
+}
