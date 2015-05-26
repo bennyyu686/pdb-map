@@ -9,7 +9,7 @@ function parse(pdb) {
         atoms: []
     };
 
-    var eleset = ["C","N","O","S","P"];
+    var eleset = ["C", "N", "O", "S", "P"];
 
     var pass = true;
     var hetatm = 0;
@@ -24,7 +24,7 @@ function parse(pdb) {
         }
     }
     //if HETATM is more than 20% of total atoms, remove this pdb.
-    var hetperc = hetatm / (hetatm+atm);
+    var hetperc = hetatm / (hetatm + atm);
     if (hetperc > 0.2) {
         pass = false;
     }
@@ -34,7 +34,7 @@ function parse(pdb) {
         result.idCode = "null";
         result.atoms = "null";
     } else {
-
+        var allocCODE = new Array();
         for (var i = 0; i < lines.length; i++) {
             var line = lines[i];
             var header = line.substring(0, 6);
@@ -43,7 +43,8 @@ function parse(pdb) {
             } else if (header === 'EXPDTA') {
                 result.experiment = line.substring(10);
             } else if (header === 'ATOM  ') {
-                var element = line.substring(76,78).trim();
+                //remove hydrogens
+                var element = line.substring(76, 78).trim();
                 var natele = false;
                 for (var j = 0; j < eleset.length; j++) {
                     if (element === eleset[j]) {
@@ -51,7 +52,24 @@ function parse(pdb) {
                         break;
                     }
                 }
-                if (natele) {
+
+                //remove alternative position
+                var alloc = line.substring(16, 17).trim();
+                var ins = false;
+                if (alloc.length > 0) {
+                    if (allocCODE.length == 0) {
+                        ins = true;
+                        allocCODE.push(alloc);
+                    } else {
+                        if (alloc == allocCODE[0]) {
+                            ins = true;
+                        }
+                    }
+                } else {
+                    ins = true;
+                }
+
+                if (natele && ins) {
                     result.atoms.push(new Atom(
                         line.substring(12, 16).trim(), // type
                         line.substring(17, 20).trim(), // residue
