@@ -1,6 +1,6 @@
 /**
  * pdb-map - PDB
- * @version v1.1.0
+ * @version v1.1.1
  * @link https://github.com/cheminfo/pdb-map
  * @license ISC
  */
@@ -4696,6 +4696,7 @@ exports.lookup = lookup;
 var data = require('./maps/data');
 
 function getMapPosition(fingerprints) {
+
     //get 136 fingerprint bits 
     var FPbits = getBits(fingerprints);
     //read 200 reference fingerprints    
@@ -4762,8 +4763,8 @@ function readFiles(filename) {
  */
 function getBits(fingerprints) {
     var bits = new Array(136);
-    for (var i = 1; i < 137; i++) {
-        bits[i - 1] = fingerprints[i];
+    for (var i = 0; i < 137; i++) {
+        bits[i] = fingerprints[i];
     }
 
     return bits;
@@ -4793,10 +4794,9 @@ function getCBDDistances(db, ref) {
     var distance = 0;
     var elements = ref.split(/\t/);
     var refbits = getBits(elements);
-    for (var i = 0; i < refbits.length; i++) {
-        var tmp = refbits[i] - db[i];
+    for (var i = 0; i < refbits.length-1; i++) {
+        var tmp = refbits[i+1] - db[i];
         distance += Math.abs(tmp);
-
     }
 
     return distance;
@@ -4830,7 +4830,6 @@ function rotateFPs(normFP, eWeV) {
             newFP[j] += normFP[k] * eWeV[j][k];
         }
     }
-
     //console.log('TRANSPOSE');
     //console.log(atoms[0].newCoordinates);
     return newFP
