@@ -24,7 +24,8 @@
     "async": "^0.9.0",
     "glob": "^5.0.5",
     "ml-distance": "^1.0.0",
-    "ml-matrix": "0.0.2"
+    "ml-matrix": "0.0.2",
+    "progress": "^1.1.8"
   },
   "devDependencies": {
     "browserify": "^8.1.3",
