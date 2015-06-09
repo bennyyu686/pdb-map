@@ -26,7 +26,7 @@ glob('**/*.gz', {
     }
 
     if (process.argv[2] === '--progress') {
-        var bar = new ProgressBar('  generating fingerprints [:bar] :percent :etas', {
+        var bar = new ProgressBar('  generating fingerprints [:bar] (:current/:total) :percent :etas', {
             complete: '=',
             incomplete: ' ',
             width: 20,
