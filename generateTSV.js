@@ -41,16 +41,18 @@ glob('**/*.gz', {
     function treatFile(file, cb) {
         fs.readFile(join(config.data, file), function (err, data) {
             if (err) return cb(err);
-            gzip.gunzip(data, function (err, contents) {
-                if (err) return cb(err);
-                var protein = parse(contents.toString());
+            try {
+                var contents = gzip.gunzipSync(data).toString();
+                var protein = parse(contents);
                 if (protein.experiment.indexOf('DIFFRACTION') > 0) {
                     var fingerprint = getFingerprint(protein.atoms);
                     process.stdout.write(protein.idCode + '\t' + fingerprint.join('\t') + '\n');
                 }
                 if (bar) bar.tick();
-                cb();
-            });
+            } catch (e) {
+                process.stderr.write('unzip failed: ' + file + '\n');
+            }
+            cb();
         });
     }
 });
