@@ -3,9 +3,10 @@
 var fs = require('fs');
 var gzip = require('zlib');
 var glob = require('glob');
-var join = require('path').join;
+var path = require('path');
 var async = require('async');
 var ProgressBar = require('progress');
+var program = require('commander');
 
 var parse = require('./src/parser');
 var getFingerprint = require('./src/fingerprint');
@@ -17,6 +18,11 @@ try {
     config = require('./config.default.json');
 }
 
+program
+    .option('-p, --progress', 'Show progression')
+    .option('-n, --use-name', 'Use filename (XXXX pdbs)')
+    .parse(process.argv);
+
 glob('**/*.gz', {
     cwd: config.data
 }, function (err, files) {
@@ -25,7 +31,7 @@ glob('**/*.gz', {
         process.exit(1);
     }
 
-    if (process.argv[2] === '--progress') {
+    if (program.progress) {
         var bar = new ProgressBar('  generating fingerprints [:bar] (:current/:total) :percent :etas', {
             complete: '=',
             incomplete: ' ',
@@ -39,16 +45,20 @@ glob('**/*.gz', {
     });
 
     function treatFile(file, cb) {
-        fs.readFile(join(config.data, file), function (err, data) {
+        fs.readFile(path.join(config.data, file), function (err, data) {
             if (err) return cb(err);
+            var fileName = path.parse(file).name;
             try {
                 var contents = gzip.gunzipSync(data).toString();
+                if (program.useName) {
+                    contents = contents.replace(/^(.*)XXXX(.*)/, '$1' + fileName + '$2');
+                }
                 var protein = parse(contents);
                 if (protein.experiment.indexOf('DIFFRACTION') > 0) {
                     var fingerprint = getFingerprint(protein.atoms);
                     process.stdout.write(protein.idCode + '\t' + fingerprint.join('\t') + '\n');
                 }
-                if (bar) bar.tick();
+                if (program.progress) bar.tick();
             } catch (e) {
                 process.stderr.write('unzip failed: ' + file + '\n');
             }
