@@ -10,7 +10,8 @@
     "name": "pdb-map"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "gen-fp": "node generateTSV.js --progress >java/input.tsv",
+    "gen-map": "cd java; java -cp PCAmaps.jar pcamaps.runIt ref200.fp input.tsv output.json.gz",
     "build": "gulp build"
   },
   "repository": "cheminfo/pdb-map",
