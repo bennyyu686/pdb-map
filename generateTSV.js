@@ -51,7 +51,7 @@ glob('**/*.gz', {
             try {
                 var contents = gzip.gunzipSync(data).toString();
                 if (program.useName) {
-                    contents = contents.replace(/^(.*)XXXX(.*)/, '$1' + fileName + '$2');
+                    contents = contents.replace(/^(.*)XXXX(.*)/, '$1' + fileName.toUpperCase() + '$2');
                 }
                 var protein = parse(contents);
                 if (protein.experiment.indexOf('DIFFRACTION') > 0) {
