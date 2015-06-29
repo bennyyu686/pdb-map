@@ -23,7 +23,7 @@ program
     .option('-n, --use-name', 'Use filename (XXXX pdbs)')
     .parse(process.argv);
 
-glob('**/*.gz', {
+glob('**/*.pdb1.gz', {
     cwd: config.data
 }, function (err, files) {
     if (err) {
