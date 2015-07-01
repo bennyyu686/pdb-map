@@ -18,6 +18,8 @@ function parse(pdb) {
     for (var i = 0; i < lines.length; i++) {
         var line = lines[i];
         var header = line.substring(0, 6);
+        var res = line.substring(17, 20).trim();
+        if (res === 'HOH') continue;
         if (header === 'HETATM') {
             hetatm++;
         } else if (header === 'ATOM  ') {
@@ -37,7 +39,7 @@ function parse(pdb) {
         result.idCode = "null";
         result.atoms = "null";
     } else {
-        var allocCODE = new Array();
+        var allocCODE = [];
         for (var i = 0; i < lines.length; i++) {
             var line = lines[i];
             var header = line.substring(0, 6);
