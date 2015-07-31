@@ -10,7 +10,9 @@
     "name": "pdb-map"
   },
   "scripts": {
-    "gen-fp": "node generateTSV.js --use-name --progress --out fullFP.tsv && cp fullFP.tsv java/input.tsv",
+    "copy-to-java": "cp fullFP.tsv java/input.tsv",
+    "gen-fp": "node generateTSV.js --use-name --progress --out fullFP.tsv && npm run copy-to-java",
+    "update-fp": "node generateTSV.js --use-name --progress --update --out fullFP.tsv && npm run copy-to-java",
     "gen-map": "cd java; java -cp PCAmaps.jar pcamaps.runIt ref200.fp input.tsv output.json.gz",
     "generate": "date && npm run gen-fp && date && npm run gen-map && date",
     "build": "gulp build"
