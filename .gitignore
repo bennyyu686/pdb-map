@@ -6,3 +6,4 @@ config.json
 
 java/input.tsv
 java/output.json*
+fullFP.tsv
