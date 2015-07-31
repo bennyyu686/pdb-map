@@ -21,6 +21,7 @@ try {
 program
     .option('-p, --progress', 'Show progression')
     .option('-n, --use-name', 'Use filename (XXXX pdbs)')
+    .option('-o, --out [file]', 'Output in a file')
     .parse(process.argv);
 
 glob('**/*.pdb1.gz', {
@@ -29,6 +30,11 @@ glob('**/*.pdb1.gz', {
     if (err) {
         console.error(err);
         process.exit(1);
+    }
+
+    var out = process.stdout;
+    if (program.out) {
+        out = fs.createWriteStream(program.out);
     }
 
     if (program.progress) {
@@ -56,7 +62,7 @@ glob('**/*.pdb1.gz', {
                 var protein = parse(contents);
                 if (protein.experiment.indexOf('DIFFRACTION') > 0) {
                     var fingerprint = getFingerprint(protein.atoms);
-                    process.stdout.write(protein.idCode + '\t' + fingerprint.join('\t') + '\n');
+                    out.write(protein.idCode + '\t' + fingerprint.join('\t') + '\n');
                 }
                 if (program.progress) bar.tick();
             } catch (e) {
