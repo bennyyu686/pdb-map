@@ -15,6 +15,7 @@
     "update-fp": "node generateTSV.js --use-name --progress --update --out fullFP.tsv && npm run copy-to-java",
     "gen-map": "cd java; java -cp PCAmaps.jar pcamaps.runIt ref200.fp input.tsv output.json.gz",
     "generate": "date && npm run gen-fp && date && npm run gen-map && date",
+    "update": "date && npm run update-fp && date && npm run gen-map && date",
     "build": "gulp build"
   },
   "repository": "cheminfo/pdb-map",
