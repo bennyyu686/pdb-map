@@ -61,16 +61,26 @@ glob('**/*.pdb1.gz', {
 
         // For each history file, if there is a deleted PDB, we remove it from the map and todolist
         // If there is an updated PDB, it is added to the todolist
+        var somethingChanged = false;
         for (var i = 0; i < historyFiles.length; i++) {
             var historyFile = require(historyFiles[i]);
             for (let j = 0; j < historyFile.deleted.length; j++) {
+                somethingChanged = true;
                 map.delete(historyFile.deleted[j]);
                 todo.delete(historyFile.deleted[j]);
             }
             for (let j = 0; j < historyFile.updated.length; j++) {
+                somethingChanged = true;
                 map.delete(historyFile.updated[j]);
                 todo.add(historyFile.updated[j]);
             }
+        }
+
+        if (!somethingChanged) {
+            // Nothing has changed, stop now
+            console.log('No changes, aborting update');
+            cleanUpdate();
+            process.exit(1);
         }
 
         // Now that the map has been filtered, write the existing PDBs
@@ -112,11 +122,7 @@ glob('**/*.pdb1.gz', {
             out.end();
         }
         if (program.update) {
-            fs.unlinkSync(program.out);
-            fs.renameSync(program.out + '.tmp', program.out);
-            historyFiles.forEach(function (file) {
-                fs.unlinkSync(file);
-            });
+            cleanUpdate();
         }
     });
 
@@ -139,6 +145,14 @@ glob('**/*.pdb1.gz', {
                 process.stderr.write('unzip failed: ' + file + '\n');
             }
             cb();
+        });
+    }
+
+    function cleanUpdate() {
+        fs.unlinkSync(program.out);
+        fs.renameSync(program.out + '.tmp', program.out);
+        historyFiles.forEach(function (file) {
+            fs.unlinkSync(file);
         });
     }
 });
