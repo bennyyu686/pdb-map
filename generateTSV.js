@@ -25,6 +25,26 @@ program
     .option('-u, --update', 'Update fingerprints')
     .parse(process.argv);
 
+var historyFiles;
+if (program.update) {
+    if (!config.rsyncHistory) {
+        throw new Error('missing rsyncHistory config value');
+    }
+    // We assume that the files are ordered by timestamp.
+    // There will be a problem when the timestamp has one more digit (Sat Nov 20 2286 18:46:40 GMT+0100)
+    historyFiles = glob('*.json', {
+        cwd: config.rsyncHistory,
+        sync: true
+    }).map(function (file) {
+        return path.resolve(config.rsyncHistory, file);
+    });
+
+    if (historyFiles.length === 0) {
+        console.log('No changes, aborting update');
+        process.exit(1);
+    }
+}
+
 glob('**/*.pdb1.gz', {
     cwd: config.data
 }, function (err, files) {
@@ -38,18 +58,6 @@ glob('**/*.pdb1.gz', {
         if (!program.out) {
             throw new Error('out file parameter is mandatory for update run');
         }
-        if (!config.rsyncHistory) {
-            throw new Error('missing rsyncHistory config value');
-        }
-
-        // We assume that the files are ordered by timestamp.
-        // There will be a problem when the timestamp has one more digit (Sat Nov 20 2286 18:46:40 GMT+0100)
-        var historyFiles = glob('*.json', {
-            cwd: config.rsyncHistory,
-            sync: true
-        }).map(function (file) {
-            return path.resolve(config.rsyncHistory, file);
-        });
 
         // Read last fingerprint file and create a Map with PDB id as the key
         var currentOut = fs.readFileSync(program.out, 'utf8').split(/[\r\n]+/);
@@ -79,7 +87,7 @@ glob('**/*.pdb1.gz', {
         if (!somethingChanged) {
             // Nothing has changed, stop now
             console.log('No changes, aborting update');
-            cleanUpdate();
+            cleanHistory();
             process.exit(1);
         }
 
@@ -122,7 +130,9 @@ glob('**/*.pdb1.gz', {
             out.end();
         }
         if (program.update) {
-            cleanUpdate();
+            fs.unlinkSync(program.out);
+            fs.renameSync(program.out + '.tmp', program.out);
+            cleanHistory();
         }
     });
 
@@ -148,9 +158,7 @@ glob('**/*.pdb1.gz', {
         });
     }
 
-    function cleanUpdate() {
-        fs.unlinkSync(program.out);
-        fs.renameSync(program.out + '.tmp', program.out);
+    function cleanHistory() {
         historyFiles.forEach(function (file) {
             fs.unlinkSync(file);
         });
